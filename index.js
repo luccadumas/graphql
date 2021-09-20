@@ -1,33 +1,38 @@
 const { gql, ApolloServer } = require("apollo-server");
 
 const produtos = [
-    {
-        id: 1,
-        nome: 'Notebook',
-        valor: 12000.32
-    },
-    {
-        id: 2,
-        nome: 'TV',
-        valor: 6000.32
-    }
+	{
+		id: 1,
+		nome: 'Notebook',
+		valor: 12000.32
+	},
+	{
+		id: 2,
+		nome: 'TV',
+		valor: 6000.32
+	},
+	{
+		id: 3,
+		nome: 'Monitor',
+		valor: 2000.0
+	}
 ];
 
 const usuarios = [
-    {
-        id: 1,
-        nome: 'Teste 1',
-        salario: 1234.54,
-        ativo: true,
-        idade: 23
-    },
-    {
-        id: 2,
-        nome: 'Teste 2',
-        salario: 4321.54,
-        ativo: false,
-        idade: 30
-    }
+	{
+		id: 1,
+		nome: 'Teste 1',
+		salario: 1234.54,
+		ativo: true,
+		idade: 23
+	},
+	{
+		id: 2,
+		nome: 'Teste 2',
+		salario: 4321.54,
+		ativo: false,
+		idade: 30
+	}
 ];
 
 const typeDefs = gql`
@@ -46,22 +51,28 @@ const typeDefs = gql`
 	type Query {
 		usuarios: [Usuario]
 		produtos: [Produto]
+		usuario(id: Int, nome: String): Usuario
 	}
 `;
 const resolvers = {
-    Query: {
-        usuarios() {
-            return usuarios;
-        },
-        produtos() {
-            return produtos;
-        }
-    }
+	Query: {
+		usuarios() {
+			return usuarios;
+		},
+		usuario(_, args) {
+			const { id, nome } = args;
+			if (id) return usuarios.find((usuario) => usuario.id === id);
+			return usuarios.find((usuario) => usuario.nome === nome);
+		},
+		produtos() {
+			return produtos;
+		}
+	}
 };
 
 const server = new ApolloServer({
-    typeDefs,
-    resolvers
+	typeDefs,
+	resolvers
 })
 
 server.listen(4000)

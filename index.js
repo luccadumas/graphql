@@ -1,78 +1,75 @@
 const { gql, ApolloServer } = require("apollo-server");
 
-const produtos = [
-	{
-		id: 1,
-		nome: 'Notebook',
-		valor: 12000.32
-	},
-	{
-		id: 2,
-		nome: 'TV',
-		valor: 6000.32
-	},
-	{
-		id: 3,
-		nome: 'Monitor',
-		valor: 2000.0
-	}
+const db = [
+  {
+    id: 1,
+    nome: "Teste",
+    email: "teste@email.com",
+    telefone: "11 1234 1234",
+    perfil: 1,
+  },
+  {
+    id: 2,
+    nome: "Teste 2",
+    email: "teste2@email.com",
+    telefone: "34 1234 1234",
+    perfil: 2,
+  },
 ];
 
-const usuarios = [
-	{
-		id: 1,
-		nome: 'Teste 1',
-		salario: 1234.54,
-		ativo: true,
-		idade: 23
-	},
-	{
-		id: 2,
-		nome: 'Teste 2',
-		salario: 4321.54,
-		ativo: false,
-		idade: 30
-	}
+const perfis = [
+  { id: 1, descricao: "ADMIN" },
+  { id: 2, descricao: "NORMAL" },
 ];
 
 const typeDefs = gql`
-	type Produto {
-		id: ID
-		nome: String
-		valor: Float
-	}
-	type Usuario {
-		idade: Int
-		salario: Float
-		nome: String
-		ativo: Boolean
-		id: ID
-	}
-	type Query {
-		usuarios: [Usuario]
-		produtos: [Produto]
-		usuario(id: Int, nome: String): Usuario
-	}
+  type Usuario {
+    id: Int
+    nome: String
+    email: String
+    telefone: String
+    perfil: Perfil
+  }
+  type Perfil {
+    id: Int
+    descricao: String
+  }
+  type Query {
+    usuario(id: Int): Usuario
+    perfis: [Perfil]
+  }
 `;
 const resolvers = {
-	Query: {
-		usuarios() {
-			return usuarios;
-		},
-		usuario(_, args) {
-			const { id, nome } = args;
-			if (id) return usuarios.find((usuario) => usuario.id === id);
-			return usuarios.find((usuario) => usuario.nome === nome);
-		},
-		produtos() {
-			return produtos;
-		}
-	}
+  Usuario: {
+    perfil(usuario) {
+      return perfis.find((p) => p.id === usuario.perfil);
+    },
+  },
+  Query: {
+    usuario(obj, args) {
+      return db.find((db) => db.id === args.id);
+    },
+    perfis() {
+      return perfis;
+    },
+  },
 };
 
 const server = new ApolloServer({
-	typeDefs,
-	resolvers
-})
+  typeDefs,
+  resolvers,
+});
 
-server.listen(4000)
+server.listen(3000);
+
+// query Query {
+// 	perfis {
+// 	  descricao
+// 	},
+// 	usuario(id: 1) {
+// 	  id,
+// 	  nome,
+// 	  email,
+// 	  telefone
+// 	}
+// }

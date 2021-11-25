@@ -24,6 +24,11 @@ const db = {
 };
 
 const typeDefs = gql`
+
+  enum TipoPerfil {
+    ADMIN
+    NORMAL
+  }
   type Usuario {
     id: Int
     nome: String
@@ -33,7 +38,7 @@ const typeDefs = gql`
   }
   type Perfil {
     id: Int
-    descricao: String
+    descricao: TipoPerfil
   }
   type Query {
     usuario(id: Int): Usuario
@@ -63,7 +68,7 @@ const server = new ApolloServer({
   resolvers,
 });
 
-server.listen();
+server.listen(3000);
 
 // apollographql
 

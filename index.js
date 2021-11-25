@@ -72,24 +72,23 @@ server.listen(3000);
 
 // apollographql
 
-// query {
-//   primeiroUsuario: usuario(id: 1){
+// Query
+
+// query pesquisaUsuario($id: Int, $showPerfil: Boolean!, $skipTelefone: Boolean!){
+//   usuario(id: $id){
 //     id,
-//     ...usuarioCompleto
-//   }
-//   segundoUsuario: usuario(id: 2){
-//     ...usuarioCompleto
-//   }
-//   usuarios {
-//     ...usuarioCompleto
+//     nome,
+//     telefone @skip(if: $skipTelefone),
+//     perfil @include(if: $showPerfil){
+//       descricao
+//     }
 //   }
 // }
 
-// fragment usuarioCompleto on Usuario{
-//   nome,
-//   telefone,
-//   perfil {
-//     id,
-//     descricao
-//   }
+// Variables
+
+// {
+//   "id": 1,
+//   "showPerfil": true,
+//   "skipTelefone": false
 // }
